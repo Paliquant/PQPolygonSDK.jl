@@ -8,6 +8,7 @@ export model
 export url
 export api
 export ticker
+export build_websocket_response_framework
 
 # types -
 export AbstractPolygonEndpointModel
@@ -57,5 +58,14 @@ export PolygonTechnicalIndicatorEMAEndpointModel
 export PolygonTechnicalIndicatorMACDEndpointModel
 export PolygonTechnicalIndicatorRSIEndpointModel
 
+# websockets crypto endpoint
+export PolygonAggregatesPerMinuteCryptoWebSocketsEndpointModel
+
+# websockets stock endpoint
+export PolygonAggregatesPerMinuteStocksWebSocketsEndpointModel
+export PolygonAggregatesPerSecondStocksWebSocketsEndpointModel
+export PolygonTradesStocksWebSocketsEndpointModel
+export PolygonQuotesStocksWebSocketsEndpointModel
+export PolygonLULDStocksWebSocketsEndpointModel
 
 end # module

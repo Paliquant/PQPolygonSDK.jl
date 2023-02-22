@@ -21,3 +21,19 @@ function check(result::Some)::(Union{Nothing,T} where {T<:Any})
     # default -
     return result.value
 end
+
+function handle_throwing_errors(error::Exception)
+    # get the original error message -
+    error_message = sprint(showerror, error, catch_backtrace())
+    vl_error_obj = ErrorException(error_message)
+    throw(vl_error_obj)
+end
+
+function handle_packaging_errors(error::Exception)::Some
+    # get the original error message -
+    error_message = sprint(showerror, error, catch_backtrace())
+    vl_error_obj = ErrorException(error_message)
+    
+    # Package the error -
+    return Some(vl_error_obj)
+end

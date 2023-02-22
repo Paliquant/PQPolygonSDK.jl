@@ -892,3 +892,57 @@ function ticker(contractModelObject::T)::String where T <: AbstractPolygonOption
     return ticker_string
 end
 # -- OPTIONS TICKER FACTORY METHODS ABOVE HERE ---------------------------------------- #
+
+# -- Websocket connection utility METHODS --------------------------------------------- #
+function input2json_string(instructions_tuple::Tuple)::String
+    
+    # initialize the input json 
+    instructions_dict = Dict{Symbol, String}()
+    instructions_dict[:action] = instructions_tuple[1]
+    
+    if length(instructions_tuple) == 2
+        
+        # this part perfroms auth from the very first step
+        instructions_dict[:params] = instructions_tuple[2]
+    else
+
+        # this art perfroms the ticker subscription
+        tickers = map(strip, instructions_tuple[3])
+
+        # add prefix for each Ticker
+        arr = map(x -> instructions_tuple[2] * "." * x, tickers)
+
+        # join together 
+        param_value = join(arr, ", ")
+
+        instructions_dict[:params] = param_value
+    end
+
+    # return processed instuctions in json format
+    return JSON.json(instructions_dict)
+
+end
+
+function set_up_input_instructions(model::T)::Vector{String} where T<:AbstractPolygonEndpointModel
+
+    # assign parameter locally
+    apiKey = model.apikey
+    event_type = model.event_type
+    tickers = model.tickers
+
+    # initialize input instruction, which will be used for WSS communication
+    res_instructions = []
+
+    # set up authentation for websocket connection
+    input_tuple_auth = ("auth", apiKey)
+    push!(res_instructions, input2json_string(input_tuple_auth))
+
+    # set up tickers for websocket subscription
+    input_tuple_param = ("subscribe", event_type, tickers)
+    push!(res_instructions, input2json_string(input_tuple_param))
+
+    return res_instructions
+
+end
+
+# -- Websocket connection utility METHODS above here --------------------------------------------- #

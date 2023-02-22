@@ -440,3 +440,82 @@ mutable struct PolygonTechnicalIndicatorRSIEndpointModel <: AbstractPolygonEndpo
     PolygonTechnicalIndicatorRSIEndpointModel() = new()
 end
 # === TECHNICAL INDICATOR ENDPOINTS ABOVE HERE ======================================================= #
+
+
+# === WEBSOCKETS ENDPOINTS BELOW HERE ================================================================ #
+
+mutable struct PolygonAggregatesPerMinuteCryptoWebSocketsEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    apikey::String
+    event_type::String
+    tickers::Array{String, 1}
+    last_n_records::Union{Nothing,Int}
+    save_frequency::Union{Nothing,Int}
+
+    PolygonAggregatesPerMinuteCryptoWebSocketsEndpointModel() = new()
+end
+
+mutable struct PolygonAggregatesPerMinuteStocksWebSocketsEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    apikey::String
+    event_type::String
+    tickers::Array{String, 1}
+    last_n_records::Union{Nothing,Int}
+    save_frequency::Union{Nothing,Int}
+
+    PolygonAggregatesPerMinuteStocksWebSocketsEndpointModel() = new()
+end
+
+mutable struct PolygonAggregatesPerSecondStocksWebSocketsEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    apikey::String
+    event_type::String
+    tickers::Array{String, 1}
+    last_n_records::Union{Nothing,Int}
+    save_frequency::Union{Nothing,Int}
+
+    PolygonAggregatesPerSecondStocksWebSocketsEndpointModel() = new()
+end
+
+
+mutable struct PolygonTradesStocksWebSocketsEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    apikey::String
+    event_type::String
+    tickers::Array{String, 1}
+    last_n_records::Union{Nothing,Int}
+    save_frequency::Union{Nothing,Int}
+
+    PolygonTradesStocksWebSocketsEndpointModel() = new()
+end
+
+
+mutable struct PolygonQuotesStocksWebSocketsEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    apikey::String
+    event_type::String
+    tickers::Array{String, 1}
+    last_n_records::Union{Nothing,Int}
+    save_frequency::Union{Nothing,Int}
+
+    PolygonQuotesStocksWebSocketsEndpointModel() = new()
+end
+
+mutable struct PolygonLULDStocksWebSocketsEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    apikey::String
+    event_type::String
+    tickers::Array{String, 1}
+    last_n_records::Union{Nothing,Int}
+    save_frequency::Union{Nothing,Int}
+
+    PolygonLULDStocksWebSocketsEndpointModel() = new()
+end
+
+# === WEBSOCKETS ENDPOINTS ABOVE HERE ================================================================ #
