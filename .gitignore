@@ -33,3 +33,4 @@ src/config/Configuration.toml
 
 # password
 test/fig_test/credentials.jl
+test/fig_test/*.pdf
