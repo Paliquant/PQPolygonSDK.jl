@@ -30,3 +30,6 @@ Manifest.toml
 
 # do not check in Configuration.toml
 src/config/Configuration.toml
+
+# password
+test/fig_test/credentials.jl

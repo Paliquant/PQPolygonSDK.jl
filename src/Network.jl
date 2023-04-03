@@ -85,18 +85,18 @@ end
 # ==================================================================================================
 # WEBSOCKET API , I put most of my function here, 
 
-function api(model::T, url_string::String, status_log::DataFrame, data_log::DataFrame
+function api(model::T, url_string::String, status_log::DataFrame, data_log::DataFrame, file_name_suffix::String
     )::Task where T<:AbstractPolygonEndpointModel
 
     # connection to websocket
-    task = _websocket_call_with_input_instructions(model, url_string, status_log, data_log) |> check
+    task = _websocket_call_with_input_instructions(model, url_string, status_log, data_log, file_name_suffix) |> check
 
     return task
 end
 
 
 function _websocket_call_with_input_instructions(
-    model::T, url::String, status_log::DataFrame, data_log::DataFrame
+    model::T, url::String, status_log::DataFrame, data_log::DataFrame, file_name_suffix::String
     ) where T<:AbstractPolygonEndpointModel
 
     try
@@ -123,7 +123,7 @@ function _websocket_call_with_input_instructions(
             
             # when the websocket reveive data, it will push data to "results" array
             task = @async push_received_data_to_results(
-                ws, status_log, data_log, last_n_records, save_frequency, typeof(model)
+                ws, status_log, data_log, last_n_records, save_frequency, typeof(model), file_name_suffix
                 )
             
             # the authentation and subscription will be sent to websockets
@@ -146,7 +146,7 @@ function _websocket_call_with_input_instructions(
 end
 
 function push_received_data_to_results(ws::WSS.WebSocket, status_log::DataFrame, data_log::DataFrame, 
-    last_n_records::Union{Nothing,Int}, save_frequency::Union{Nothing,Int}, model_type::Type{T}
+    last_n_records::Union{Nothing,Int}, save_frequency::Union{Nothing,Int}, model_type::Type{T}, file_name_suffix::String
     ) where T<:AbstractPolygonEndpointModel
     
     # for file saving purpose
@@ -156,7 +156,8 @@ function push_received_data_to_results(ws::WSS.WebSocket, status_log::DataFrame,
         status_save = []
         data_save = []
     end
-
+    latency = []
+    # latency_id = 1;
     # for file naming purpose
     file_num_status = 0;
     file_num_data = 0;
@@ -167,14 +168,22 @@ function push_received_data_to_results(ws::WSS.WebSocket, status_log::DataFrame,
         while isopen(ws.io)
             # this part will receive message from websocket and save it to result Array
             received_data  = WSS.receive(ws)
+            dt_start_processing = now().instant.periods.value
             data = String(received_data)
-
+            # begin
+            #     println(latency_id, "\t", data)
+            #     latency_id += 1
+            # end
             (file_num_status, file_num_data, status_save, data_save) = _save_result_to_var_n_log(model_type, data, status_log, data_log, 
             status_save, data_save, file_num_status, file_num_data, last_n_records, save_frequency)
+            dt_finish_processing = now().instant.periods.value
+            push!(latency, dt_finish_processing - dt_start_processing)
         end
         
     catch error
-
+        if size(latency) != 0
+            save_to_file(latency, file_name_suffix)
+        end
         if !isnothing(save_frequency)
             # save the remaining to files if the user set up save frequency
             if size(status_save)[1] != 0
@@ -201,6 +210,19 @@ function push_received_data_to_results(ws::WSS.WebSocket, status_log::DataFrame,
             handle_throwing_errors(error)
         end
     end
+end
+
+function save_to_file(saved_array::Array{Any, 1}, file_name_suffix::String)
+    file_name = pwd()*"/files/log_latency_$(file_name_suffix).txt"
+    # write headers
+    io = open(file_name, "w")
+    
+    # write data
+    for saved_single in saved_array
+        write(io, string(saved_single) * "\n")
+    end
+    
+    close(io)
 end
 
 function save_to_file(id::Int64, status_saved_array::Array{Any, 1}, headers::String, file_name::String)
