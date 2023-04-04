@@ -27,7 +27,7 @@ begin
     endpoint_options["last_n_records"] = 100000 # default is 30
     endpoint_options["save_frequency"] = 100000
 
-    endpoint_model = model(PolygonTradesStocksWebSocketsEndpointModel, user_model, endpoint_options)
+    endpoint_model = model(PolygonAggregatesPerSecondStocksWebSocketsEndpointModel, user_model, endpoint_options)
     @test endpoint_model.apikey == options["apikey"]
     @test endpoint_model.event_type == endpoint_options["event_type"]
     @test endpoint_model.tickers == endpoint_options["tickers"]

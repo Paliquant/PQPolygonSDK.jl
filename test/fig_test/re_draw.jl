@@ -38,4 +38,24 @@ function draw_latency(file_name_suffix)
     savefig("$(dir)/pic_$(file_name_suffix).pdf")
 end
 
-# include("test/fig_test/latency_draw.jl")
+
+begin
+    files = [
+        # Aggregate
+        "file_creation_submit_one_a",
+        "file_creation_submit_five_a",
+        "file_creation_submit_ten_a",
+        # Trade
+        "file_creation_submit_one_t",
+        "file_creation_submit_five_t",
+        "file_creation_submit_ten_t",
+        # Quote
+        "file_creation_submit_one_q",
+        "file_creation_submit_five_q",
+        "file_creation_submit_ten_q",
+        ]
+    for file in files
+        draw_latency(file)
+    end
+end
+# include("test/fig_test/re_draw.jl")
