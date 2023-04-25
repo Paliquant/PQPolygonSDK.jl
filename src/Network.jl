@@ -168,7 +168,7 @@ function push_received_data_to_results(ws::WSS.WebSocket, status_log::DataFrame,
         while isopen(ws.io)
             # this part will receive message from websocket and save it to result Array
             received_data  = WSS.receive(ws)
-            dt_start_processing = now().instant.periods.value
+            dt_start_processing = Int(time_ns())
             data = String(received_data)
             # begin
             #     println(latency_id, "\t", data)
@@ -176,7 +176,7 @@ function push_received_data_to_results(ws::WSS.WebSocket, status_log::DataFrame,
             # end
             (file_num_status, file_num_data, status_save, data_save) = _save_result_to_var_n_log(model_type, data, status_log, data_log, 
             status_save, data_save, file_num_status, file_num_data, last_n_records, save_frequency)
-            dt_finish_processing = now().instant.periods.value
+            dt_finish_processing = Int(time_ns())
             push!(latency, dt_finish_processing - dt_start_processing)
         end
         

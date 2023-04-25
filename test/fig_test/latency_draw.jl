@@ -27,9 +27,9 @@ function draw_latency(file_name_suffix)
     x_array = result_vec[1]
     x_array = x_array[2 : end]
     y_array = result_vec[2]
-    y_array = y_array[2 : end]
+    y_array = y_array[2 : end] / 1_000_000
 
-    scatter(x_array, y_array, label="Performance", mc=:white, msc=colorant"#EF4035", legend=:false, ms=3,
+    scatter(x_array, y_array, label="Latency", mc=:white, msc=colorant"#EF4035", legend=:false, ms=3,
     bg="floralwhite", background_color_outside="white", framestyle=:box, fg_legend=:transparent, lw=3)
     xlabel!("Number of messages received", fontsize=18)
     ylabel!("Latency (milliseconds)", fontsize=18)

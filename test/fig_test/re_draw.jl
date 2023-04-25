@@ -27,8 +27,8 @@ function draw_latency(file_name_suffix)
     x_array = result_vec[1]
     x_array = x_array[2 : end]
     y_array = result_vec[2]
-    y_array = y_array[2 : end]
-
+    y_array = y_array[2 : end] / 1_000_000
+    print("average $(file_name_suffix): ", sum(y_array) / length(y_array), "\n")
     scatter(x_array, y_array, label="Performance", mc=:white, msc=colorant"#EF4035", legend=:false, ms=3,
     bg="floralwhite", background_color_outside="white", framestyle=:box, fg_legend=:transparent, lw=3)
     xlabel!("Number of messages received", fontsize=18)
@@ -43,16 +43,18 @@ begin
     files = [
         # Aggregate
         "file_creation_submit_one_a",
-        "file_creation_submit_five_a",
-        "file_creation_submit_ten_a",
-        # Trade
-        "file_creation_submit_one_t",
-        "file_creation_submit_five_t",
-        "file_creation_submit_ten_t",
-        # Quote
         "file_creation_submit_one_q",
-        "file_creation_submit_five_q",
-        "file_creation_submit_ten_q",
+        "file_creation_submit_one_t",
+        "file_creation_submit_five_a",
+        # "file_creation_submit_ten_a",
+        # # Trade
+        
+        # "file_creation_submit_five_t",
+        # "file_creation_submit_ten_t",
+        # # Quote
+        
+        # "file_creation_submit_five_q",
+        # "file_creation_submit_ten_q",
         ]
     for file in files
         draw_latency(file)
